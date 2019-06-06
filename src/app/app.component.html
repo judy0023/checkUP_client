@@ -14,6 +14,10 @@ span, a {
    font-weight:bold; 
    font-family: 'Nanum Gothic', sans-serif;
 }
+
+li {
+   width: 200px;
+}
 </style>
 
 <!-- Header -->
@@ -31,14 +35,11 @@ span, a {
             <nav id="nav">
                <ul>
                   <li><a href="#" routerLink="" id="homepage"
-                        onclick="selectedClick('homepage')">홈&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                  <li>&nbsp;&nbsp;&nbsp;</li>
+                        onclick="selectedClick('homepage')">홈&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
                   <li><a href="#" routerLink="cancer" id="cancer" 
                      onclick="selectedClick('cancer')">암검진&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                  <li>&nbsp;&nbsp;&nbsp;</li>
                   <li data-toggle="modal" data-target="#hosMapModal"><a href="#" routerLink="hospital" id="hospital" 
                      onclick="selectedClick('hospital')">병원찾기&nbsp;&nbsp;&nbsp;</a></li>
-                  <li>&nbsp;&nbsp;&nbsp;</li>
                </ul>
             </nav>
          </div>

@@ -1,17 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Checkup } from '../Checkup';
 import { DataService } from '../data.service';
-import { enableProdMode } from '@angular/core';
 import { CustomerService } from '../customer.service';
-import { Information } from '../Information';
 import { ResInformation } from '../ResInfomation';
-import { Variable } from '@angular/compiler/src/render3/r3_ast';
+
 
 
 declare const sec_map: any;
 declare const dataTrans: any;
+declare const getOptionName: any;
 
-enableProdMode();
+/* enableProdMode(); */
 
 @Component({
   selector: 'app-second',
@@ -25,7 +24,7 @@ export class SecondComponent implements OnInit {
 
   checkup: Checkup[];
   res_info: ResInformation;
-  name: any;
+  optionNames = new Array();
 
   constructor(private dataService: DataService, private customerService: CustomerService) { }
 
@@ -36,7 +35,7 @@ export class SecondComponent implements OnInit {
   ngOnInit(): void {
 
     this.getCustomers();
-
+    this.customerService.setFlag(true);
     var repeat = setInterval(function () {
       if (document.getElementById("mapShow") == null || document.getElementById("map") == null) {
         console.log("loading");
@@ -49,11 +48,6 @@ export class SecondComponent implements OnInit {
     }, 1000);
 
     console.log(this.customerService.data());
-
-    if (this.customerService.data().hosRecCheck == 0) {
-      document.getElementById("map").style.display = "none";
-    }
-
   }
 
   private data() {
@@ -61,15 +55,15 @@ export class SecondComponent implements OnInit {
   }
 
   private mapShow(inspection_item: String, cancer_name: String, hos_addr: String[], hos_name: String[], hos_no: String[]) {
-
-    console.log(inspection_item + "::::::::::" + cancer_name);
-    console.log(hos_addr + "::::::::::" + hos_name + ":::::::::" + hos_no);
-
-    if (this.customerService.data().hosRecCheck == 0 || inspection_item == "검사가 필요한 항목이 없습니다." || cancer_name == "갑상선암" || cancer_name == "폐암") {
+    this.optionNames = getOptionName(0);
+    document.getElementById("info_title").style.display = "block";
+    if (this.customerService.data().hosRecCheck == 0 || inspection_item == "검사가 필요한 항목이 없습니다." || cancer_name == "갑상선암" || cancer_name == "폐암" || hos_addr[0] == "") {
+      document.getElementById("info_title").style.display = "none";
+      if (hos_addr[0] == "" || cancer_name == "갑상선암" || cancer_name == "폐암") {
+        document.getElementById("info_title_no").style.display = "block";
+      }
       return;
     }
-    if (hos_addr != null) {
-      sec_map(hos_addr, hos_name, hos_no, this.dataService, this.res_info);
-    }
+    sec_map(hos_addr, hos_name, hos_no, this.dataService, this.res_info);
   }
 }

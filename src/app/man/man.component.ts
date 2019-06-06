@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Customer } from '../customer';
 import { Router } from '@angular/router';
 import { CustomerService } from '../customer.service';
-import { DataService } from '../data.service';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'app-man',
@@ -23,9 +23,11 @@ export class ManComponent implements OnInit {
   cocancer_F : number;
   scancer_F : number;
   
-  constructor(public customerService : CustomerService, private router : Router) {}
+  constructor(public customerService : CustomerService, private router : Router, private location: Location) {}
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.customerService.setFlag(false);
+  }
 
   private onSubmit() {
     this.onChecked();
@@ -35,9 +37,10 @@ export class ManComponent implements OnInit {
   private onChecked() {
     this.cancer = ["tcancer","lcancer","scancer","tcancer_F","cocancer_F","scancer_F"];
     this.input = [this.tcancer,this.lcancer,this.scancer,this.tcancer_F,this.cocancer_F,this.scancer_F];
+
     for(var i=0 ; i<this.cancer.length ; i++) {
       for(var j=0 ; j<document.getElementsByName(this.cancer[i]).length ; j++) {
-        const input = document.getElementsByName(this.cancer[i])[j] as HTMLInputElement;;
+        const input = document.getElementsByName(this.cancer[i])[j] as HTMLInputElement;
         if(input.checked){
           this.check[i] = true;
           break;
@@ -52,8 +55,12 @@ export class ManComponent implements OnInit {
       }
     }
 
-    this.onInput()
+    this.onInput();
 
+  }
+
+  private goBack() {
+    this.location.back();
   }
 
   private onInput() {

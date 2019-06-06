@@ -822,12 +822,10 @@
    
    #nav li {
       display: inline-block;
-      padding: 0px 20px;
+      
    }
    
    #nav a {
-      display: block;
-      float: left;
       margin-right: 2px;
       text-decoration: none;
       text-transform: uppercase;

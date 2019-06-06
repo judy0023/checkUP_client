@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Checkup } from '../Checkup';
 import { CustomerService } from '../customer.service';
-import { DataService } from '../data.service';
+import {Location} from '@angular/common';
 
 
 @Component({
@@ -26,9 +26,11 @@ export class WomanComponent implements OnInit {
   cocancer_F : number;
   scancer_F : number;
 
-  constructor(public customerService : CustomerService, private router : Router) {}
+  constructor(public customerService : CustomerService, private router : Router, private location: Location) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.customerService.setFlag(false);
+  }
 
   private onSubmit() {
     this.onChecked();
@@ -57,6 +59,10 @@ export class WomanComponent implements OnInit {
 
     this.onInput()
 
+  }
+
+  private goBack() {
+    this.location.back();
   }
 
   private onInput() {
