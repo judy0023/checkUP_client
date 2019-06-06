@@ -5,6 +5,7 @@ import { Customer } from '../customer';
 
 declare const getSaveCity: any;
 declare const getSavePrice: any;
+declare const getOptionName : any;
 
 @Component({
   selector: 'app-first',
@@ -20,6 +21,7 @@ export class FirstComponent implements OnInit {
   name: string = "";
   age: number;
   flag: boolean;
+  optionNames = new Array();
 
   constructor(private router: Router, public customerService: CustomerService) {
 
@@ -78,9 +80,11 @@ export class FirstComponent implements OnInit {
     this.customerService.data().name = this.name;
     this.customerService.data().age = this.age;
 
+    this.optionNames = getOptionName(0);
+
     if (this.customerService.data().hosRecCheck == 1) {
 
-      if (this.customerService.data().city === undefined || this.customerService.data().price === undefined) {
+      if (this.optionNames[0]  == null || this.optionNames [1] == null) {
         document.getElementById("location").style.display = "block";
       } else {
         document.getElementById("location").style.display = "none"
@@ -102,7 +106,7 @@ export class FirstComponent implements OnInit {
         }
       }
 
-      if (this.customerService.data().city !== undefined && this.customerService.data().price !== undefined
+      if (this.optionNames[0]  != null && this.optionNames[1] != null
         && this.customerService.data().name != "" && this.customerService.data().age != null) {
         if (this.customerService.data().gender == 1) {
           this.router.navigate(['/man']);

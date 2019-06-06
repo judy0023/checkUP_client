@@ -6,7 +6,7 @@ var optionNames1 = new Array();
 var optionNames2 = new Array();
 
 function onCheck() {
-    if (city === undefined || price === undefined || something === undefined) {
+    if (optionNames2[0] == null || optionNames2[1] == null || something === undefined) {
 
     } else {
         document.getElementById("save").setAttribute('data-dismiss', 'modal');
@@ -17,16 +17,17 @@ function onCheck() {
 
 function setOptionName1(optionName) {
 
-
     var cities = ["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
         , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"];
 
+    optionNames1[1] = optionName;
     for (var i = 0; i < cities.length; i++) {
         if (optionName == cities[i]) {
             optionNames1[0] = optionName;
+            optionNames1[1] = null;
         }
     }
-    optionNames1[1] = optionName;
+
 }
 
 function setOptionName2(optionName) {
@@ -34,12 +35,17 @@ function setOptionName2(optionName) {
     var cities = ["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
         , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"];
 
+    optionNames2[1] = optionName;
+
     for (var i = 0; i < cities.length; i++) {
         if (optionName == cities[i]) {
             optionNames2[0] = optionName;
+            optionNames2[1] = null;
         }
     }
-    optionNames2[1] = optionName;
+
+    console.log(optionNames2[1] + "," + optionNames2[0]);
+
 }
 
 function getOptionName(id) {
