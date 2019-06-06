@@ -1,0 +1,99 @@
+<style>
+  th,
+  td,
+  header,
+  h2,
+  h1 {
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  th,
+  td {
+    font-size: 20px;
+  }
+
+  .btn-primary {
+    width: 15px;
+    height: 15px;
+  }
+
+  header {
+    text-align: center;
+  }
+</style>
+
+
+<div id="main-wrapper">
+  <div id="main">
+    <div class="container">
+      <div id="content">
+        <header>
+          <h2>문진표를 작성해 주세요.</h2>
+          <h1>(질문을 잘 읽고 답해주시기 바랍니다.)</h1>
+        </header>
+        <form (ngSubmit)="onSubmit()">
+          <table class="table table-hover">
+            <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+              <tr>
+                <th colspan="3">인 적 사 항</th>
+              </tr>
+            </thead>
+            <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+              <tr>
+                <td rowspan="2"> 1. 이 름 </td>
+                <td colspan="2"><input type="text" class="form-control" placeholder="Enter username" name="name"
+                    required [(ngModel)]="customerService.data().name"></td>
+              </tr>
+              <tr>
+                <td id="name" style="color:red; display: none;"> 이름을 입력해 주세요. </td>
+              </tr>
+              <tr>
+                <td rowspan="2"> 2. 나 이 </td>
+                <td colspan="2"><input type="number" class="form-control" placeholder="Enter Age" name="age" required
+                    [(ngModel)]="customerService.data().age"></td>
+              </tr>
+              <tr>
+                <td id="age" style="color:red; display: none;"> 나이를 입력해 주세요. </td>
+              </tr>
+              <tr>
+                <td> 3. 성 별 </td>
+                <td><input type="radio" class="btn btn-primary" name="gender"
+                    (click)="customerService.data().gender = 1" (click)="sexCheck()" checked> 남자</td>
+                <td><input type="radio" class="btn btn-primary" name="gender"
+                    (click)="customerService.data().gender = 2" (click)="sexCheck()"> 여자 </td>
+              </tr>
+              <tr>
+                <td>
+                  <div id="sex1" style="display: none"> 3-1. 성 경험 여부</div>
+                </td>
+                <td>
+                  <div id="sex2" style="display: none"><input type="radio" class="btn btn-primary" name="sexlife"
+                      checked (click)="customerService.data().ccancer = 0"> No </div>
+                </td>
+                <td>
+                  <div id="sex3" style="display: none"><input type="radio" class="btn btn-primary" name="sexlife"
+                      (click)="customerService.data().ccancer = 1">Yes</div>
+                </td>
+              </tr>
+              <tr>
+                <td rowspan="2"> 병원 추천 여부 </td>
+                <td><input type="radio" class="btn btn-primary" name="hospital"
+                    (click)="customerService.data().hosRecCheck = 0" checked> No </td>
+                <td><input type="radio" class="btn btn-primary" name="hospital"
+                    (click)="customerService.data().hosRecCheck = 1" data-toggle="modal" data-target="#myModal"> Yes
+                </td>
+              </tr>
+              <tr>
+                <td id="location" style="color:red; display: none;"> 입력하신 위치를 확인해 주세요. </td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <input type="submit" class="btn btn-outline-primary" value="NEXT" style="float:right;">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

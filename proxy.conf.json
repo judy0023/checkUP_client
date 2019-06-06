@@ -1,0 +1,6 @@
+{
+    "/api/*": {
+       "target": "http://ec2-54-197-38-163.compute-1.amazonaws.com:9000",
+       "secure": false
+   }
+}

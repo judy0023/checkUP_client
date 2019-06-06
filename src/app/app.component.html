@@ -1,0 +1,49 @@
+<script src="/assets/js/skel.min.js"></script>
+<script src="/assets/js/skel-panels.min.js"></script>
+<script src="/assets/js/init.js"></script>
+
+<noscript>
+   <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+   <link rel="stylesheet" href="/assets/css/skel-noscript.css" />
+   <link rel="stylesheet" href="/assets/css/style.css" />
+   <link rel="stylesheet" href="/assets/css/style-desktop.css" />
+</noscript>
+
+<style>
+span, a {
+   font-weight:bold; 
+   font-family: 'Nanum Gothic', sans-serif;
+}
+</style>
+
+<!-- Header -->
+<div id="header-wrapper">
+   <div id="header">
+      <div class="container">
+         <div id="logo">
+            <!-- Logo -->
+            <h1><a href="#"><img src="/assets/images/checkup_.png"></a></h1>
+            <span>한성건강관리협회(주)</span>
+         </div>
+      </div>
+      <div id="menu-wrapper">
+         <div class="container">
+            <nav id="nav">
+               <ul>
+                  <li><a href="#" routerLink="" id="homepage"
+                        onclick="selectedClick('homepage')">홈&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+                  <li>&nbsp;&nbsp;&nbsp;</li>
+                  <li><a href="#" routerLink="cancer" id="cancer" 
+                     onclick="selectedClick('cancer')">암검진&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+                  <li>&nbsp;&nbsp;&nbsp;</li>
+                  <li data-toggle="modal" data-target="#hosMapModal"><a href="#" routerLink="hospital" id="hospital" 
+                     onclick="selectedClick('hospital')">병원찾기&nbsp;&nbsp;&nbsp;</a></li>
+                  <li>&nbsp;&nbsp;&nbsp;</li>
+               </ul>
+            </nav>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Header -->
+<router-outlet></router-outlet>

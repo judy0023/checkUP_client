@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>HelloAngular</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="assets/js/location.js"></script>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a752e2b148b7d8de4d176a04c3992a16&libraries=services"></script>
+
+  <script src=" https://unpkg.com/sweetalert/dist/sweetalert.min.js "></script>
+
+</head>
+
+<body>
+  <style>
+    h4,
+    dt,
+    td {
+      font-weight: bold;
+      font-family: 'Nanum Gothic', sans-serif;
+      font-size: 24px;
+    }
+  </style>
+
+  <!-- The Modal -->
+  <div ng-app="myApp">
+    <div id="myModal" class="modal fade" data-backdrop="static" ng-controller="myCtrl">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="ly_header">지번 검색</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+
+            <div id="pop_wrap">
+              <div id="pop_content">
+                <!--layer content -->
+                <dl class="ly_body" style="margin-left: auto; margin-right: auto; text-align: center;">
+                  <dt style="font-weight: bold; font-family: 'Nanum Gothic', sans-serif;font-size: 20px">찾고자 하는 병원의 지역을
+                    입력하세요</dt>
+                  <br>
+                  <dd>
+                    <table class="ly_body_innter" style="margin-left: auto; margin-right: auto; text-align: center;">
+                      <tr>
+                        <td style="font-weight: bold; font-family: 'Nanum Gothic', sans-serif;font-size: 20px"> 시/도
+                          &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                        <td>
+                          <span ng-repeat="optionKey in optionProperties">
+                            <select style="width:150px;height:40px;" ng-if="$index === 0"
+                              ng-model="selectedOptions[$index]"
+                              ng-options="option as option.name for option in options"
+                              ng-change="onChange(selectedOptions[$index])">
+                            </select>
+                          </span>
+                        </td>
+                        <td> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                        <td style="font-weight: bold; font-family: 'Nanum Gothic', sans-serif;font-size: 20px"> 시/군/구
+                          &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                        <td>
+                          <span ng-repeat="optionKey in optionProperties">
+                            <select style="width:150px;height:40px;" ng-if="$index !== 0"
+                              ng-model="selectedOptions[$index]"
+                              ng-options="option as option.name for option in selectedOptions[$index-1].children"
+                              ng-change="onChange(selectedOptions[$index])">
+                            </select>
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </dd>
+                </dl>
+                <div id="totalresults">
+                </div>
+                <a class="close_layer" href="javascript:window.close();" alt="창닫기"> <img src="/img/button/btnClose.gif"
+                    width="13" height="12" /> </a>
+                <!--//layer content -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">SAVE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="hosMapModal" class="modal fade" data-backdrop="static" ng-controller="myCtrl1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="ly_header">지번 검색</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+
+            <div id="pop_wrap">
+              <div id="pop_content">
+                <table class="ly_body_innter" style="margin-left: auto; margin-right: auto; text-align: center;">
+                  <tr>
+                    <td style="font-weight: bold; font-family: 'Nanum Gothic', sans-serif;font-size: 20px"> 시/도
+                      &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                    <td>
+                      <span ng-repeat="optionKey in optionProperties">
+                        <select style="width:150px;height:40px;" ng-if="$index === 0" ng-model="selectedOptions[$index]"
+                          ng-options="option as option.name for option in options"
+                          ng-change="onChange(selectedOptions[$index])">
+                        </select>
+                      </span>
+                    </td>
+                    <td> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                    <td style="font-weight: bold; font-family: 'Nanum Gothic', sans-serif;font-size: 20px"> 시/군/구
+                      &nbsp;&nbsp;&nbsp;&nbsp; </td>
+                    <td>
+                      <span ng-repeat="optionKey in optionProperties">
+                        <select style="width:150px;height:40px;" ng-if="$index !== 0" ng-model="selectedOptions[$index]"
+                          ng-options="option as option.name for option in selectedOptions[$index-1].children"
+                          ng-change="onChange(selectedOptions[$index])">
+                        </select>
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+
+                <table class="ly_body_innter" style="margin-left: auto; margin-right: auto;">
+                  <tr>
+                    <td><input type="radio" name="check" onclick="something=0" style="width:23px;height:23px;"
+                        checked>전체</input></td>
+                    <td><input type="radio" name="check" onclick="something=1"
+                        style="width:23px;height:23px;">일반</input></td>
+                    <td><input type="radio" name="check" onclick="something=2"
+                        style="width:23px;height:23px;">구강</input></td>
+                  </tr>
+                  <tr>
+                    <td><input type="radio" name="check" onclick="something=3" style="width:23px;height:23px;">암</input>
+                    </td>
+                    <td><input type="radio" name="check" onclick="something=5"
+                        style="width:23px;height:23px;">출장검진</input></td>
+                    <td><input type="radio" name="check" onclick="something=6"
+                        style="width:23px;height:23px;">영유아</input></td>
+                  </tr>
+                </table>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="onCheck()" id="save" data-dismiss="">SAVE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope) {
+      $scope.selectedOptions = {};
+      $scope.optionData = [];
+
+      $scope.optionProperties = ["City", "price"];
+      $scope.options = [
+        {
+          "name": "서울특별시", "children": [
+            { "name": "강남구", "children": [], "value": { "city": 11, "price": 11680 } },
+            { "name": "강동구", "children": [], "value": { "city": 11, "price": 11740 } },
+            { "name": "강북구", "children": [], "value": { "city": 11, "price": 11305 } },
+            { "name": "강서구", "children": [], "value": { "city": 11, "price": 11500 } },
+            { "name": "관악구", "children": [], "value": { "city": 11, "price": 11620 } },
+
+            { "name": "광진구", "children": [], "value": { "city": 11, "price": 11215 } },
+            { "name": "구로구", "children": [], "value": { "city": 11, "price": 11530 } },
+            { "name": "금천구", "children": [], "value": { "city": 11, "price": 11545 } },
+            { "name": "노원구", "children": [], "value": { "city": 11, "price": 11350 } },
+            { "name": "도봉구", "children": [], "value": { "city": 11, "price": 11320 } },
+
+            { "name": "동대문구", "children": [], "value": { "city": 11, "price": 11230 } },
+            { "name": "동작구", "children": [], "value": { "city": 11, "price": 11590 } },
+            { "name": "마포구", "children": [], "value": { "city": 11, "price": 11440 } },
+            { "name": "서대문구", "children": [], "value": { "city": 11, "price": 11410 } },
+            { "name": "서초구", "children": [], "value": { "city": 11, "price": 11650 } },
+
+            { "name": "성동구", "children": [], "value": { "city": 11, "price": 11200 } },
+            { "name": "성북구", "children": [], "value": { "city": 11, "price": 11290 } },
+            { "name": "송파구", "children": [], "value": { "city": 11, "price": 11710 } },
+            { "name": "양천구", "children": [], "value": { "city": 11, "price": 11470 } },
+            { "name": "영등포구", "children": [], "value": { "city": 11, "price": 11560 } },
+
+            { "name": "용산구", "children": [], "value": { "city": 11, "price": 11170 } },
+            { "name": "은평구", "children": [], "value": { "city": 11, "price": 11380 } },
+            { "name": "종로구", "children": [], "value": { "city": 11, "price": 11110 } },
+            { "name": "중구", "children": [], "value": { "city": 11, "price": 11140 } },
+            { "name": "중랑구", "children": [], "value": { "city": 11, "price": 11260 } }
+          ]
+        },
+        {
+          "name": "부산광역시", "children": [
+            { "name": "강서구", "children": [], "value": { "city": 26, "price": 26440 } },
+            { "name": "금정구", "children": [], "value": { "city": 26, "price": 26410 } },
+            { "name": "기장군", "children": [], "value": { "city": 26, "price": 26710 } },
+            { "name": "남구", "children": [], "value": { "city": 26, "price": 26290 } },
+            { "name": "동구", "children": [], "value": { "city": 26, "price": 26170 } },
+
+            { "name": "동래구", "children": [], "value": { "city": 26, "price": 26260 } },
+            { "name": "부산진구", "children": [], "value": { "city": 26, "price": 26230 } },
+            { "name": "북구", "children": [], "value": { "city": 26, "price": 26320 } },
+            { "name": "사상구", "children": [], "value": { "city": 26, "price": 26530 } },
+            { "name": "사하구", "children": [], "value": { "city": 26, "price": 26380 } },
+
+            { "name": "서구", "children": [], "value": { "city": 26, "price": 26140 } },
+            { "name": "수영구", "children": [], "value": { "city": 26, "price": 26500 } },
+            { "name": "연제구", "children": [], "value": { "city": 26, "price": 26470 } },
+            { "name": "영도구", "children": [], "value": { "city": 26, "price": 26200 } },
+            { "name": "중구", "children": [], "value": { "city": 26, "price": 26110 } },
+
+            { "name": "해운대구", "children": [], "value": { "city": 26, "price": 26350 } }
+          ]
+        },
+        {
+          "name": "대구광역시", "children": [
+            { "name": "남구", "children": [], "value": { "city": 27, "price": 27200 } },
+            { "name": "달서구", "children": [], "value": { "city": 27, "price": 27290 } },
+            { "name": "달성군", "children": [], "value": { "city": 27, "price": 27710 } },
+            { "name": "동구", "children": [], "value": { "city": 27, "price": 27140 } },
+            { "name": "북구", "children": [], "value": { "city": 27, "price": 27230 } },
+
+            { "name": "서구", "children": [], "value": { "city": 27, "price": 27170 } },
+            { "name": "수성구", "children": [], "value": { "city": 27, "price": 27290 } },
+            { "name": "중구", "children": [], "value": { "city": 27, "price": 27110 } }
+          ]
+        },
+        {
+          "name": "인천광역시", "children": [
+            { "name": "강화구", "children": [], "value": { "city": 28, "price": 28710 } },
+            { "name": "계양구", "children": [], "value": { "city": 28, "price": 28245 } },
+            { "name": "남구", "children": [], "value": { "city": 28, "price": 28170 } },
+            { "name": "남동구", "children": [], "value": { "city": 28, "price": 28200 } },
+            { "name": "동구", "children": [], "value": { "city": 28, "price": 28140 } },
+
+            { "name": "미추홀구", "children": [], "value": { "city": 28, "price": 28177 } },
+            { "name": "부평구", "children": [], "value": { "city": 28, "price": 28237 } },
+            { "name": "서구", "children": [], "value": { "city": 28, "price": 28260 } },
+            { "name": "연수구", "children": [], "value": { "city": 28, "price": 28185 } },
+            { "name": "옹진군", "children": [], "value": { "city": 28, "price": 28720 } },
+
+            { "name": "중구", "children": [], "value": { "city": 28, "price": 28110 } }
+          ]
+        },
+        {
+          "name": "광주광역시", "children": [
+            { "name": "광산구", "children": [], "value": { "city": 29, "price": 29200 } },
+            { "name": "남구", "children": [], "value": { "city": 29, "price": 29155 } },
+            { "name": "동구", "children": [], "value": { "city": 29, "price": 29110 } },
+            { "name": "북구", "children": [], "value": { "city": 29, "price": 29170 } },
+            { "name": "서구", "children": [], "value": { "city": 29, "price": 29140 } }
+          ]
+        },
+        {
+          "name": "대전광역시", "children": [
+            { "name": "대덕구", "children": [], "value": { "city": 30, "price": 30230 } },
+            { "name": "동구", "children": [], "value": { "city": 30, "price": 30110 } },
+            { "name": "서구", "children": [], "value": { "city": 30, "price": 30170 } },
+            { "name": "유성구", "children": [], "value": { "city": 30, "price": 30200 } },
+            { "name": "중구", "children": [], "value": { "city": 30, "price": 30140 } }
+          ]
+        },
+        {
+          "name": "울산광역시", "children": [
+            { "name": "남구", "children": [], "value": { "city": 31, "price": 31140 } },
+            { "name": "동구", "children": [], "value": { "city": 31, "price": 31170 } },
+            { "name": "북구", "children": [], "value": { "city": 31, "price": 31200 } },
+            { "name": "울주군", "children": [], "value": { "city": 31, "price": 31710 } },
+            { "name": "중구", "children": [], "value": { "city": 31, "price": 31110 } }
+          ]
+        },
+        {
+          "name": "세종특별자치시", "children": [
+            { "name": "세종특별자치시", "children": [], "value": { "city": 36, "price": 36110 } },
+          ]
+        },
+        {
+          "name": "경기도", "children": [
+            { "name": "가평군", "children": [], "value": { "city": 41, "price": 41820 } },
+            { "name": "고양시 덕양구", "children": [], "value": { "city": 41, "price": 41281 } },
+            { "name": "고양시 일산동구", "children": [], "value": { "city": 41, "price": 41285 } },
+            { "name": "고양시 일산서구", "children": [], "value": { "city": 41, "price": 41287 } },
+            { "name": "과천시", "children": [], "value": { "city": 41, "price": 41290 } },
+
+            { "name": "광명시", "children": [], "value": { "city": 41, "price": 41210 } },
+            { "name": "광주시", "children": [], "value": { "city": 41, "price": 41610 } },
+            { "name": "구리시", "children": [], "value": { "city": 41, "price": 41310 } },
+            { "name": "군포시", "children": [], "value": { "city": 41, "price": 41410 } },
+            { "name": "김포시", "children": [], "value": { "city": 41, "price": 41570 } },
+
+            { "name": "남양주시", "children": [], "value": { "city": 41, "price": 41360 } },
+            { "name": "동두천시", "children": [], "value": { "city": 41, "price": 41250 } },
+            { "name": "부천시", "children": [], "value": { "city": 41, "price": 41190 } },
+            { "name": "성남시 분당구", "children": [], "value": { "city": 41, "price": 41135 } },
+            { "name": "성남시 수정구", "children": [], "value": { "city": 41, "price": 41131 } },
+
+            { "name": "성남시 중원구", "children": [], "value": { "city": 41, "price": 41133 } },
+            { "name": "수원시 권선구", "children": [], "value": { "city": 41, "price": 41113 } },
+            { "name": "수원시 영통구", "children": [], "value": { "city": 41, "price": 41117 } },
+            { "name": "수원시 장안구", "children": [], "value": { "city": 41, "price": 41111 } },
+            { "name": "수원시 팔달구", "children": [], "value": { "city": 41, "price": 41115 } },
+
+            { "name": "시흥시", "children": [], "value": { "city": 41, "price": 41390 } },
+            { "name": "안산시 단원구", "children": [], "value": { "city": 41, "price": 41273 } },
+            { "name": "안산시 상록구", "children": [], "value": { "city": 41, "price": 41271 } },
+            { "name": "안성시", "children": [], "value": { "city": 41, "price": 41550 } },
+            { "name": "안양시 동안구", "children": [], "value": { "city": 41, "price": 41173 } },
+
+            { "name": "안양시 만안구", "children": [], "value": { "city": 41, "price": 41171 } },
+            { "name": "양주시", "children": [], "value": { "city": 41, "price": 41630 } },
+            { "name": "양평군", "children": [], "value": { "city": 41, "price": 41830 } },
+            { "name": "여주군", "children": [], "value": { "city": 41, "price": 41730 } },
+            { "name": "연천군", "children": [], "value": { "city": 41, "price": 41800 } },
+
+            { "name": "오산시", "children": [], "value": { "city": 41, "price": 41370 } },
+            { "name": "용인시 기흥구", "children": [], "value": { "city": 41, "price": 41463 } },
+            { "name": "용인시 수지구", "children": [], "value": { "city": 41, "price": 41465 } },
+            { "name": "용인시 처인구", "children": [], "value": { "city": 41, "price": 41461 } },
+            { "name": "의왕시", "children": [], "value": { "city": 41, "price": 41430 } },
+
+            { "name": "의정부시", "children": [], "value": { "city": 41, "price": 41150 } },
+            { "name": "이천시", "children": [], "value": { "city": 41, "price": 41500 } },
+            { "name": "파주시", "children": [], "value": { "city": 41, "price": 41480 } },
+            { "name": "평택시", "children": [], "value": { "city": 41, "price": 41220 } },
+            { "name": "포천시", "children": [], "value": { "city": 41, "price": 41650 } },
+
+            { "name": "하남시", "children": [], "value": { "city": 41, "price": 41450 } },
+            { "name": "화성시", "children": [], "value": { "city": 41, "price": 41590 } }
+          ]
+        },
+        {
+          "name": "강원도", "children": [
+            { "name": "춘천시", "children": [], "value": { "city": 42, "price": 42110 } },
+            { "name": "원주시", "children": [], "value": { "city": 42, "price": 42130 } },
+            { "name": "강릉시", "children": [], "value": { "city": 42, "price": 42150 } },
+            { "name": "동해시", "children": [], "value": { "city": 42, "price": 42170 } },
+            { "name": "태백시", "children": [], "value": { "city": 42, "price": 42190 } },
+
+            { "name": "속초시", "children": [], "value": { "city": 42, "price": 42210 } },
+            { "name": "삼척시", "children": [], "value": { "city": 42, "price": 42230 } },
+            { "name": "홍천군", "children": [], "value": { "city": 42, "price": 42720 } },
+            { "name": "횡성군", "children": [], "value": { "city": 42, "price": 42730 } },
+            { "name": "영월군", "children": [], "value": { "city": 42, "price": 42750 } },
+
+            { "name": "평창군", "children": [], "value": { "city": 42, "price": 42760 } },
+            { "name": "정선군", "children": [], "value": { "city": 42, "price": 42770 } },
+            { "name": "철원군", "children": [], "value": { "city": 42, "price": 42780 } },
+            { "name": "화천군", "children": [], "value": { "city": 42, "price": 42790 } },
+            { "name": "양구군", "children": [], "value": { "city": 42, "price": 42800 } },
+
+            { "name": "인제군", "children": [], "value": { "city": 42, "price": 42810 } },
+            { "name": "고성군", "children": [], "value": { "city": 42, "price": 42820 } },
+            { "name": "양양군", "children": [], "value": { "city": 42, "price": 42830 } }
+          ]
+        },
+        {
+          "name": "충청북도", "children": [
+            { "name": "괴산군", "children": [], "value": { "city": 43, "price": 43760 } },
+            { "name": "단양군", "children": [], "value": { "city": 43, "price": 43800 } },
+            { "name": "보은군", "children": [], "value": { "city": 43, "price": 43720 } },
+            { "name": "영동군", "children": [], "value": { "city": 43, "price": 43740 } },
+            { "name": "옥천군", "children": [], "value": { "city": 43, "price": 43730 } },
+
+            { "name": "음성군", "children": [], "value": { "city": 43, "price": 43770 } },
+            { "name": "제천시", "children": [], "value": { "city": 43, "price": 43150 } },
+            { "name": "증평군", "children": [], "value": { "city": 43, "price": 43745 } },
+            { "name": "진천군", "children": [], "value": { "city": 43, "price": 43750 } },
+            { "name": "청주시 상당구", "children": [], "value": { "city": 43, "price": 43111 } },
+
+            { "name": "청주시 서원구", "children": [], "value": { "city": 43, "price": 43112 } },
+            { "name": "청주시 청원구", "children": [], "value": { "city": 43, "price": 43114 } },
+            { "name": "청주시 흥덕구", "children": [], "value": { "city": 43, "price": 43113 } },
+            { "name": "충주시", "children": [], "value": { "city": 43, "price": 43130 } }
+          ]
+        },
+        {
+          "name": "충청남도", "children": [
+            { "name": "계룡시", "children": [], "value": { "city": 44, "price": 44250 } },
+            { "name": "공주시", "children": [], "value": { "city": 44, "price": 44150 } },
+            { "name": "금산군", "children": [], "value": { "city": 44, "price": 44710 } },
+            { "name": "논산시", "children": [], "value": { "city": 44, "price": 44230 } },
+            { "name": "당진시", "children": [], "value": { "city": 44, "price": 44270 } },
+
+            { "name": "보령시", "children": [], "value": { "city": 44, "price": 44180 } },
+            { "name": "부여군", "children": [], "value": { "city": 44, "price": 44760 } },
+            { "name": "서산시", "children": [], "value": { "city": 44, "price": 44210 } },
+            { "name": "서천군", "children": [], "value": { "city": 44, "price": 44770 } },
+            { "name": "아산시", "children": [], "value": { "city": 44, "price": 44200 } },
+
+            { "name": "예산군", "children": [], "value": { "city": 44, "price": 44810 } },
+            { "name": "천안시 동남구", "children": [], "value": { "city": 44, "price": 44131 } },
+            { "name": "천안시 서북구", "children": [], "value": { "city": 44, "price": 44133 } },
+            { "name": "청양군", "children": [], "value": { "city": 44, "price": 44790 } },
+            { "name": "태안군", "children": [], "value": { "city": 44, "price": 44825 } },
+
+            { "name": "홍성군", "children": [], "value": { "city": 44, "price": 44800 } }
+          ]
+        },
+        {
+          "name": "전라북도", "children": [
+            { "name": "고창군", "children": [], "value": { "city": 45, "price": 45790 } },
+            { "name": "군산시", "children": [], "value": { "city": 45, "price": 45130 } },
+            { "name": "김제시", "children": [], "value": { "city": 45, "price": 45210 } },
+            { "name": "남원시", "children": [], "value": { "city": 45, "price": 45190 } },
+            { "name": "무주군", "children": [], "value": { "city": 45, "price": 45730 } },
+
+            { "name": "부안군", "children": [], "value": { "city": 45, "price": 45800 } },
+            { "name": "순창군", "children": [], "value": { "city": 45, "price": 45770 } },
+            { "name": "완주군", "children": [], "value": { "city": 45, "price": 45710 } },
+            { "name": "익산시", "children": [], "value": { "city": 45, "price": 45140 } },
+            { "name": "임실군", "children": [], "value": { "city": 45, "price": 45750 } },
+
+            { "name": "장수군", "children": [], "value": { "city": 45, "price": 45740 } },
+            { "name": "전주시 던직구", "children": [], "value": { "city": 45, "price": 45113 } },
+            { "name": "전주시 완산구", "children": [], "value": { "city": 45, "price": 45111 } },
+            { "name": "정읍시", "children": [], "value": { "city": 45, "price": 45180 } },
+            { "name": "진안군", "children": [], "value": { "city": 45, "price": 45720 } }
+          ]
+        },
+        {
+          "name": "전라남도", "children": [
+            { "name": "강진군", "children": [], "value": { "city": 46, "price": 46810 } },
+            { "name": "고흥군", "children": [], "value": { "city": 46, "price": 46770 } },
+            { "name": "곡성군", "children": [], "value": { "city": 46, "price": 46720 } },
+            { "name": "광양시", "children": [], "value": { "city": 46, "price": 46230 } },
+            { "name": "구례군", "children": [], "value": { "city": 46, "price": 46730 } },
+
+            { "name": "나주시", "children": [], "value": { "city": 46, "price": 46170 } },
+            { "name": "담양군", "children": [], "value": { "city": 46, "price": 46710 } },
+            { "name": "목포시", "children": [], "value": { "city": 46, "price": 46110 } },
+            { "name": "무안군", "children": [], "value": { "city": 46, "price": 46840 } },
+            { "name": "보성군", "children": [], "value": { "city": 46, "price": 46780 } },
+
+            { "name": "순천시", "children": [], "value": { "city": 46, "price": 46150 } },
+            { "name": "신안군", "children": [], "value": { "city": 46, "price": 46910 } },
+            { "name": "여수시", "children": [], "value": { "city": 46, "price": 46130 } },
+            { "name": "영광군", "children": [], "value": { "city": 46, "price": 46870 } },
+            { "name": "영암군", "children": [], "value": { "city": 46, "price": 46830 } },
+
+            { "name": "완도군", "children": [], "value": { "city": 46, "price": 46890 } },
+            { "name": "장성군", "children": [], "value": { "city": 46, "price": 46880 } },
+            { "name": "장흥군", "children": [], "value": { "city": 46, "price": 46800 } },
+            { "name": "진도군", "children": [], "value": { "city": 46, "price": 46900 } },
+            { "name": "함평군", "children": [], "value": { "city": 46, "price": 46860 } },
+
+            { "name": "해남군", "children": [], "value": { "city": 46, "price": 46820 } },
+            { "name": "화순군", "children": [], "value": { "city": 46, "price": 46790 } }
+
+          ]
+        },
+        {
+          "name": "경상북도", "children": [
+            { "name": "경산시", "children": [], "value": { "city": 47, "price": 47290 } },
+            { "name": "경주시", "children": [], "value": { "city": 47, "price": 47130 } },
+            { "name": "고령군", "children": [], "value": { "city": 47, "price": 47830 } },
+            { "name": "구미시", "children": [], "value": { "city": 47, "price": 47190 } },
+            { "name": "군위군", "children": [], "value": { "city": 47, "price": 47720 } },
+
+            { "name": "김천시", "children": [], "value": { "city": 47, "price": 47150 } },
+            { "name": "문경시", "children": [], "value": { "city": 47, "price": 47280 } },
+            { "name": "봉화군", "children": [], "value": { "city": 47, "price": 47920 } },
+            { "name": "상주시", "children": [], "value": { "city": 47, "price": 47250 } },
+            { "name": "성주군", "children": [], "value": { "city": 47, "price": 47840 } },
+
+            { "name": "안동시", "children": [], "value": { "city": 47, "price": 47170 } },
+            { "name": "영덕군", "children": [], "value": { "city": 47, "price": 47770 } },
+            { "name": "영양군", "children": [], "value": { "city": 47, "price": 47760 } },
+            { "name": "영주시", "children": [], "value": { "city": 47, "price": 47210 } },
+            { "name": "영천시", "children": [], "value": { "city": 47, "price": 47230 } },
+
+            { "name": "예천군", "children": [], "value": { "city": 47, "price": 47900 } },
+            { "name": "울릉군", "children": [], "value": { "city": 47, "price": 47940 } },
+            { "name": "울진군", "children": [], "value": { "city": 47, "price": 47730 } },
+            { "name": "의성군", "children": [], "value": { "city": 47, "price": 47730 } },
+            { "name": "청도군", "children": [], "value": { "city": 47, "price": 47820 } },
+
+            { "name": "청송군", "children": [], "value": { "city": 47, "price": 47750 } },
+            { "name": "칠곡군", "children": [], "value": { "city": 47, "price": 47850 } },
+            { "name": "포항시 남구", "children": [], "value": { "city": 47, "price": 47111 } },
+            { "name": "포항시 북구", "children": [], "value": { "city": 47, "price": 47113 } }
+          ]
+        },
+        {
+          "name": "경상남도", "children": [
+            { "name": "거제시", "children": [], "value": { "city": 48, "price": 48310 } },
+            { "name": "거창군", "children": [], "value": { "city": 48, "price": 48880 } },
+            { "name": "고성군", "children": [], "value": { "city": 48, "price": 48820 } },
+            { "name": "김해시", "children": [], "value": { "city": 48, "price": 48250 } },
+            { "name": "남해군", "children": [], "value": { "city": 48, "price": 48840 } },
+
+            { "name": "밀양시", "children": [], "value": { "city": 48, "price": 48270 } },
+            { "name": "사천시", "children": [], "value": { "city": 48, "price": 48240 } },
+            { "name": "산청군", "children": [], "value": { "city": 48, "price": 48860 } },
+            { "name": "양산시", "children": [], "value": { "city": 48, "price": 48330 } },
+            { "name": "의령군", "children": [], "value": { "city": 48, "price": 48720 } },
+
+            { "name": "진주시", "children": [], "value": { "city": 48, "price": 48170 } },
+            { "name": "창녕군", "children": [], "value": { "city": 48, "price": 48740 } },
+            { "name": "창원시 마산합포구", "children": [], "value": { "city": 48, "price": 48125 } },
+            { "name": "창원시 마산회원구", "children": [], "value": { "city": 48, "price": 48127 } },
+            { "name": "창원시 성산구", "children": [], "value": { "city": 48, "price": 48123 } },
+
+            { "name": "창원시 의창구", "children": [], "value": { "city": 48, "price": 48121 } },
+            { "name": "창원시 진해구", "children": [], "value": { "city": 48, "price": 48129 } },
+            { "name": "통영시", "children": [], "value": { "city": 48, "price": 48220 } },
+            { "name": "하동군", "children": [], "value": { "city": 48, "price": 48850 } },
+            { "name": "함안군", "children": [], "value": { "city": 48, "price": 48730 } },
+
+            { "name": "함양군", "children": [], "value": { "city": 48, "price": 48870 } },
+            { "name": "합천군", "children": [], "value": { "city": 48, "price": 48890 } }
+          ]
+        },
+        {
+          "name": "제주특별자치도", "children": [
+            { "name": "제주시", "children": [], "value": { "city": 50, "price": 50110 } },
+            { "name": "서귀포시", "children": [], "value": { "city": 50, "price": 50130 } }
+          ]
+        },
+      ];
+
+      $scope.onChange = function (option) {
+        console.log(option);
+        if (option.value) {
+          $scope.city = option.value.city;
+          $scope.price = option.value.price;
+
+          var saveOption = [];
+          for (var idx in $scope.optionProperties) {
+            saveOption.push({ key: $scope.optionProperties[idx], value: $scope.selectedOptions[idx].name });
+          }
+
+          $scope.optionData = saveOption;
+        }
+        save($scope.city, $scope.price);
+      };
+    });
+
+    app.controller('myCtrl1', function ($scope) {
+      $scope.selectedOptions = {};
+      $scope.optionData = [];
+
+      $scope.optionProperties = ["City", "price"];
+      $scope.options = [
+        {
+          "name": "서울특별시", "children": [
+            { "name": "강남구", "children": [], "value": { "city": 11, "price": 11680 } },
+            { "name": "강동구", "children": [], "value": { "city": 11, "price": 11740 } },
+            { "name": "강북구", "children": [], "value": { "city": 11, "price": 11305 } },
+            { "name": "강서구", "children": [], "value": { "city": 11, "price": 11500 } },
+            { "name": "관악구", "children": [], "value": { "city": 11, "price": 11620 } },
+
+            { "name": "광진구", "children": [], "value": { "city": 11, "price": 11215 } },
+            { "name": "구로구", "children": [], "value": { "city": 11, "price": 11530 } },
+            { "name": "금천구", "children": [], "value": { "city": 11, "price": 11545 } },
+            { "name": "노원구", "children": [], "value": { "city": 11, "price": 11350 } },
+            { "name": "도봉구", "children": [], "value": { "city": 11, "price": 11320 } },
+
+            { "name": "동대문구", "children": [], "value": { "city": 11, "price": 11230 } },
+            { "name": "동작구", "children": [], "value": { "city": 11, "price": 11590 } },
+            { "name": "마포구", "children": [], "value": { "city": 11, "price": 11440 } },
+            { "name": "서대문구", "children": [], "value": { "city": 11, "price": 11410 } },
+            { "name": "서초구", "children": [], "value": { "city": 11, "price": 11650 } },
+
+            { "name": "성동구", "children": [], "value": { "city": 11, "price": 11200 } },
+            { "name": "성북구", "children": [], "value": { "city": 11, "price": 11290 } },
+            { "name": "송파구", "children": [], "value": { "city": 11, "price": 11710 } },
+            { "name": "양천구", "children": [], "value": { "city": 11, "price": 11470 } },
+            { "name": "영등포구", "children": [], "value": { "city": 11, "price": 11560 } },
+
+            { "name": "용산구", "children": [], "value": { "city": 11, "price": 11170 } },
+            { "name": "은평구", "children": [], "value": { "city": 11, "price": 11380 } },
+            { "name": "종로구", "children": [], "value": { "city": 11, "price": 11110 } },
+            { "name": "중구", "children": [], "value": { "city": 11, "price": 11140 } },
+            { "name": "중랑구", "children": [], "value": { "city": 11, "price": 11260 } }
+          ]
+        },
+        {
+          "name": "부산광역시", "children": [
+            { "name": "강서구", "children": [], "value": { "city": 26, "price": 26440 } },
+            { "name": "금정구", "children": [], "value": { "city": 26, "price": 26410 } },
+            { "name": "기장군", "children": [], "value": { "city": 26, "price": 26710 } },
+            { "name": "남구", "children": [], "value": { "city": 26, "price": 26290 } },
+            { "name": "동구", "children": [], "value": { "city": 26, "price": 26170 } },
+
+            { "name": "동래구", "children": [], "value": { "city": 26, "price": 26260 } },
+            { "name": "부산진구", "children": [], "value": { "city": 26, "price": 26230 } },
+            { "name": "북구", "children": [], "value": { "city": 26, "price": 26320 } },
+            { "name": "사상구", "children": [], "value": { "city": 26, "price": 26530 } },
+            { "name": "사하구", "children": [], "value": { "city": 26, "price": 26380 } },
+
+            { "name": "서구", "children": [], "value": { "city": 26, "price": 26140 } },
+            { "name": "수영구", "children": [], "value": { "city": 26, "price": 26500 } },
+            { "name": "연제구", "children": [], "value": { "city": 26, "price": 26470 } },
+            { "name": "영도구", "children": [], "value": { "city": 26, "price": 26200 } },
+            { "name": "중구", "children": [], "value": { "city": 26, "price": 26110 } },
+
+            { "name": "해운대구", "children": [], "value": { "city": 26, "price": 26350 } }
+          ]
+        },
+        {
+          "name": "대구광역시", "children": [
+            { "name": "남구", "children": [], "value": { "city": 27, "price": 27200 } },
+            { "name": "달서구", "children": [], "value": { "city": 27, "price": 27290 } },
+            { "name": "달성군", "children": [], "value": { "city": 27, "price": 27710 } },
+            { "name": "동구", "children": [], "value": { "city": 27, "price": 27140 } },
+            { "name": "북구", "children": [], "value": { "city": 27, "price": 27230 } },
+
+            { "name": "서구", "children": [], "value": { "city": 27, "price": 27170 } },
+            { "name": "수성구", "children": [], "value": { "city": 27, "price": 27290 } },
+            { "name": "중구", "children": [], "value": { "city": 27, "price": 27110 } }
+          ]
+        },
+        {
+          "name": "인천광역시", "children": [
+            { "name": "강화구", "children": [], "value": { "city": 28, "price": 28710 } },
+            { "name": "계양구", "children": [], "value": { "city": 28, "price": 28245 } },
+            { "name": "남구", "children": [], "value": { "city": 28, "price": 28170 } },
+            { "name": "남동구", "children": [], "value": { "city": 28, "price": 28200 } },
+            { "name": "동구", "children": [], "value": { "city": 28, "price": 28140 } },
+
+            { "name": "미추홀구", "children": [], "value": { "city": 28, "price": 28177 } },
+            { "name": "부평구", "children": [], "value": { "city": 28, "price": 28237 } },
+            { "name": "서구", "children": [], "value": { "city": 28, "price": 28260 } },
+            { "name": "연수구", "children": [], "value": { "city": 28, "price": 28185 } },
+            { "name": "옹진군", "children": [], "value": { "city": 28, "price": 28720 } },
+
+            { "name": "중구", "children": [], "value": { "city": 28, "price": 28110 } }
+          ]
+        },
+        {
+          "name": "광주광역시", "children": [
+            { "name": "광산구", "children": [], "value": { "city": 29, "price": 29200 } },
+            { "name": "남구", "children": [], "value": { "city": 29, "price": 29155 } },
+            { "name": "동구", "children": [], "value": { "city": 29, "price": 29110 } },
+            { "name": "북구", "children": [], "value": { "city": 29, "price": 29170 } },
+            { "name": "서구", "children": [], "value": { "city": 29, "price": 29140 } }
+          ]
+        },
+        {
+          "name": "대전광역시", "children": [
+            { "name": "대덕구", "children": [], "value": { "city": 30, "price": 30230 } },
+            { "name": "동구", "children": [], "value": { "city": 30, "price": 30110 } },
+            { "name": "서구", "children": [], "value": { "city": 30, "price": 30170 } },
+            { "name": "유성구", "children": [], "value": { "city": 30, "price": 30200 } },
+            { "name": "중구", "children": [], "value": { "city": 30, "price": 30140 } }
+          ]
+        },
+        {
+          "name": "울산광역시", "children": [
+            { "name": "남구", "children": [], "value": { "city": 31, "price": 31140 } },
+            { "name": "동구", "children": [], "value": { "city": 31, "price": 31170 } },
+            { "name": "북구", "children": [], "value": { "city": 31, "price": 31200 } },
+            { "name": "울주군", "children": [], "value": { "city": 31, "price": 31710 } },
+            { "name": "중구", "children": [], "value": { "city": 31, "price": 31110 } }
+          ]
+        },
+        {
+          "name": "세종특별자치시", "children": [
+            { "name": "세종특별자치시", "children": [], "value": { "city": 36, "price": 36110 } },
+          ]
+        },
+        {
+          "name": "경기도", "children": [
+            { "name": "가평군", "children": [], "value": { "city": 41, "price": 41820 } },
+            { "name": "고양시 덕양구", "children": [], "value": { "city": 41, "price": 41281 } },
+            { "name": "고양시 일산동구", "children": [], "value": { "city": 41, "price": 41285 } },
+            { "name": "고양시 일산서구", "children": [], "value": { "city": 41, "price": 41287 } },
+            { "name": "과천시", "children": [], "value": { "city": 41, "price": 41290 } },
+
+            { "name": "광명시", "children": [], "value": { "city": 41, "price": 41210 } },
+            { "name": "광주시", "children": [], "value": { "city": 41, "price": 41610 } },
+            { "name": "구리시", "children": [], "value": { "city": 41, "price": 41310 } },
+            { "name": "군포시", "children": [], "value": { "city": 41, "price": 41410 } },
+            { "name": "김포시", "children": [], "value": { "city": 41, "price": 41570 } },
+
+            { "name": "남양주시", "children": [], "value": { "city": 41, "price": 41360 } },
+            { "name": "동두천시", "children": [], "value": { "city": 41, "price": 41250 } },
+            { "name": "부천시", "children": [], "value": { "city": 41, "price": 41190 } },
+            { "name": "성남시 분당구", "children": [], "value": { "city": 41, "price": 41135 } },
+            { "name": "성남시 수정구", "children": [], "value": { "city": 41, "price": 41131 } },
+
+            { "name": "성남시 중원구", "children": [], "value": { "city": 41, "price": 41133 } },
+            { "name": "수원시 권선구", "children": [], "value": { "city": 41, "price": 41113 } },
+            { "name": "수원시 영통구", "children": [], "value": { "city": 41, "price": 41117 } },
+            { "name": "수원시 장안구", "children": [], "value": { "city": 41, "price": 41111 } },
+            { "name": "수원시 팔달구", "children": [], "value": { "city": 41, "price": 41115 } },
+
+            { "name": "시흥시", "children": [], "value": { "city": 41, "price": 41390 } },
+            { "name": "안산시 단원구", "children": [], "value": { "city": 41, "price": 41273 } },
+            { "name": "안산시 상록구", "children": [], "value": { "city": 41, "price": 41271 } },
+            { "name": "안성시", "children": [], "value": { "city": 41, "price": 41550 } },
+            { "name": "안양시 동안구", "children": [], "value": { "city": 41, "price": 41173 } },
+
+            { "name": "안양시 만안구", "children": [], "value": { "city": 41, "price": 41171 } },
+            { "name": "양주시", "children": [], "value": { "city": 41, "price": 41630 } },
+            { "name": "양평군", "children": [], "value": { "city": 41, "price": 41830 } },
+            { "name": "여주군", "children": [], "value": { "city": 41, "price": 41730 } },
+            { "name": "연천군", "children": [], "value": { "city": 41, "price": 41800 } },
+
+            { "name": "오산시", "children": [], "value": { "city": 41, "price": 41370 } },
+            { "name": "용인시 기흥구", "children": [], "value": { "city": 41, "price": 41463 } },
+            { "name": "용인시 수지구", "children": [], "value": { "city": 41, "price": 41465 } },
+            { "name": "용인시 처인구", "children": [], "value": { "city": 41, "price": 41461 } },
+            { "name": "의왕시", "children": [], "value": { "city": 41, "price": 41430 } },
+
+            { "name": "의정부시", "children": [], "value": { "city": 41, "price": 41150 } },
+            { "name": "이천시", "children": [], "value": { "city": 41, "price": 41500 } },
+            { "name": "파주시", "children": [], "value": { "city": 41, "price": 41480 } },
+            { "name": "평택시", "children": [], "value": { "city": 41, "price": 41220 } },
+            { "name": "포천시", "children": [], "value": { "city": 41, "price": 41650 } },
+
+            { "name": "하남시", "children": [], "value": { "city": 41, "price": 41450 } },
+            { "name": "화성시", "children": [], "value": { "city": 41, "price": 41590 } }
+          ]
+        },
+        {
+          "name": "강원도", "children": [
+            { "name": "춘천시", "children": [], "value": { "city": 42, "price": 42110 } },
+            { "name": "원주시", "children": [], "value": { "city": 42, "price": 42130 } },
+            { "name": "강릉시", "children": [], "value": { "city": 42, "price": 42150 } },
+            { "name": "동해시", "children": [], "value": { "city": 42, "price": 42170 } },
+            { "name": "태백시", "children": [], "value": { "city": 42, "price": 42190 } },
+
+            { "name": "속초시", "children": [], "value": { "city": 42, "price": 42210 } },
+            { "name": "삼척시", "children": [], "value": { "city": 42, "price": 42230 } },
+            { "name": "홍천군", "children": [], "value": { "city": 42, "price": 42720 } },
+            { "name": "횡성군", "children": [], "value": { "city": 42, "price": 42730 } },
+            { "name": "영월군", "children": [], "value": { "city": 42, "price": 42750 } },
+
+            { "name": "평창군", "children": [], "value": { "city": 42, "price": 42760 } },
+            { "name": "정선군", "children": [], "value": { "city": 42, "price": 42770 } },
+            { "name": "철원군", "children": [], "value": { "city": 42, "price": 42780 } },
+            { "name": "화천군", "children": [], "value": { "city": 42, "price": 42790 } },
+            { "name": "양구군", "children": [], "value": { "city": 42, "price": 42800 } },
+
+            { "name": "인제군", "children": [], "value": { "city": 42, "price": 42810 } },
+            { "name": "고성군", "children": [], "value": { "city": 42, "price": 42820 } },
+            { "name": "양양군", "children": [], "value": { "city": 42, "price": 42830 } }
+          ]
+        },
+        {
+          "name": "충청북도", "children": [
+            { "name": "괴산군", "children": [], "value": { "city": 43, "price": 43760 } },
+            { "name": "단양군", "children": [], "value": { "city": 43, "price": 43800 } },
+            { "name": "보은군", "children": [], "value": { "city": 43, "price": 43720 } },
+            { "name": "영동군", "children": [], "value": { "city": 43, "price": 43740 } },
+            { "name": "옥천군", "children": [], "value": { "city": 43, "price": 43730 } },
+
+            { "name": "음성군", "children": [], "value": { "city": 43, "price": 43770 } },
+            { "name": "제천시", "children": [], "value": { "city": 43, "price": 43150 } },
+            { "name": "증평군", "children": [], "value": { "city": 43, "price": 43745 } },
+            { "name": "진천군", "children": [], "value": { "city": 43, "price": 43750 } },
+            { "name": "청주시 상당구", "children": [], "value": { "city": 43, "price": 43111 } },
+
+            { "name": "청주시 서원구", "children": [], "value": { "city": 43, "price": 43112 } },
+            { "name": "청주시 청원구", "children": [], "value": { "city": 43, "price": 43114 } },
+            { "name": "청주시 흥덕구", "children": [], "value": { "city": 43, "price": 43113 } },
+            { "name": "충주시", "children": [], "value": { "city": 43, "price": 43130 } }
+          ]
+        },
+        {
+          "name": "충청남도", "children": [
+            { "name": "계룡시", "children": [], "value": { "city": 44, "price": 44250 } },
+            { "name": "공주시", "children": [], "value": { "city": 44, "price": 44150 } },
+            { "name": "금산군", "children": [], "value": { "city": 44, "price": 44710 } },
+            { "name": "논산시", "children": [], "value": { "city": 44, "price": 44230 } },
+            { "name": "당진시", "children": [], "value": { "city": 44, "price": 44270 } },
+
+            { "name": "보령시", "children": [], "value": { "city": 44, "price": 44180 } },
+            { "name": "부여군", "children": [], "value": { "city": 44, "price": 44760 } },
+            { "name": "서산시", "children": [], "value": { "city": 44, "price": 44210 } },
+            { "name": "서천군", "children": [], "value": { "city": 44, "price": 44770 } },
+            { "name": "아산시", "children": [], "value": { "city": 44, "price": 44200 } },
+
+            { "name": "예산군", "children": [], "value": { "city": 44, "price": 44810 } },
+            { "name": "천안시 동남구", "children": [], "value": { "city": 44, "price": 44131 } },
+            { "name": "천안시 서북구", "children": [], "value": { "city": 44, "price": 44133 } },
+            { "name": "청양군", "children": [], "value": { "city": 44, "price": 44790 } },
+            { "name": "태안군", "children": [], "value": { "city": 44, "price": 44825 } },
+
+            { "name": "홍성군", "children": [], "value": { "city": 44, "price": 44800 } }
+          ]
+        },
+        {
+          "name": "전라북도", "children": [
+            { "name": "고창군", "children": [], "value": { "city": 45, "price": 45790 } },
+            { "name": "군산시", "children": [], "value": { "city": 45, "price": 45130 } },
+            { "name": "김제시", "children": [], "value": { "city": 45, "price": 45210 } },
+            { "name": "남원시", "children": [], "value": { "city": 45, "price": 45190 } },
+            { "name": "무주군", "children": [], "value": { "city": 45, "price": 45730 } },
+
+            { "name": "부안군", "children": [], "value": { "city": 45, "price": 45800 } },
+            { "name": "순창군", "children": [], "value": { "city": 45, "price": 45770 } },
+            { "name": "완주군", "children": [], "value": { "city": 45, "price": 45710 } },
+            { "name": "익산시", "children": [], "value": { "city": 45, "price": 45140 } },
+            { "name": "임실군", "children": [], "value": { "city": 45, "price": 45750 } },
+
+            { "name": "장수군", "children": [], "value": { "city": 45, "price": 45740 } },
+            { "name": "전주시 던직구", "children": [], "value": { "city": 45, "price": 45113 } },
+            { "name": "전주시 완산구", "children": [], "value": { "city": 45, "price": 45111 } },
+            { "name": "정읍시", "children": [], "value": { "city": 45, "price": 45180 } },
+            { "name": "진안군", "children": [], "value": { "city": 45, "price": 45720 } }
+          ]
+        },
+        {
+          "name": "전라남도", "children": [
+            { "name": "강진군", "children": [], "value": { "city": 46, "price": 46810 } },
+            { "name": "고흥군", "children": [], "value": { "city": 46, "price": 46770 } },
+            { "name": "곡성군", "children": [], "value": { "city": 46, "price": 46720 } },
+            { "name": "광양시", "children": [], "value": { "city": 46, "price": 46230 } },
+            { "name": "구례군", "children": [], "value": { "city": 46, "price": 46730 } },
+
+            { "name": "나주시", "children": [], "value": { "city": 46, "price": 46170 } },
+            { "name": "담양군", "children": [], "value": { "city": 46, "price": 46710 } },
+            { "name": "목포시", "children": [], "value": { "city": 46, "price": 46110 } },
+            { "name": "무안군", "children": [], "value": { "city": 46, "price": 46840 } },
+            { "name": "보성군", "children": [], "value": { "city": 46, "price": 46780 } },
+
+            { "name": "순천시", "children": [], "value": { "city": 46, "price": 46150 } },
+            { "name": "신안군", "children": [], "value": { "city": 46, "price": 46910 } },
+            { "name": "여수시", "children": [], "value": { "city": 46, "price": 46130 } },
+            { "name": "영광군", "children": [], "value": { "city": 46, "price": 46870 } },
+            { "name": "영암군", "children": [], "value": { "city": 46, "price": 46830 } },
+
+            { "name": "완도군", "children": [], "value": { "city": 46, "price": 46890 } },
+            { "name": "장성군", "children": [], "value": { "city": 46, "price": 46880 } },
+            { "name": "장흥군", "children": [], "value": { "city": 46, "price": 46800 } },
+            { "name": "진도군", "children": [], "value": { "city": 46, "price": 46900 } },
+            { "name": "함평군", "children": [], "value": { "city": 46, "price": 46860 } },
+
+            { "name": "해남군", "children": [], "value": { "city": 46, "price": 46820 } },
+            { "name": "화순군", "children": [], "value": { "city": 46, "price": 46790 } }
+
+          ]
+        },
+        {
+          "name": "경상북도", "children": [
+            { "name": "경산시", "children": [], "value": { "city": 47, "price": 47290 } },
+            { "name": "경주시", "children": [], "value": { "city": 47, "price": 47130 } },
+            { "name": "고령군", "children": [], "value": { "city": 47, "price": 47830 } },
+            { "name": "구미시", "children": [], "value": { "city": 47, "price": 47190 } },
+            { "name": "군위군", "children": [], "value": { "city": 47, "price": 47720 } },
+
+            { "name": "김천시", "children": [], "value": { "city": 47, "price": 47150 } },
+            { "name": "문경시", "children": [], "value": { "city": 47, "price": 47280 } },
+            { "name": "봉화군", "children": [], "value": { "city": 47, "price": 47920 } },
+            { "name": "상주시", "children": [], "value": { "city": 47, "price": 47250 } },
+            { "name": "성주군", "children": [], "value": { "city": 47, "price": 47840 } },
+
+            { "name": "안동시", "children": [], "value": { "city": 47, "price": 47170 } },
+            { "name": "영덕군", "children": [], "value": { "city": 47, "price": 47770 } },
+            { "name": "영양군", "children": [], "value": { "city": 47, "price": 47760 } },
+            { "name": "영주시", "children": [], "value": { "city": 47, "price": 47210 } },
+            { "name": "영천시", "children": [], "value": { "city": 47, "price": 47230 } },
+
+            { "name": "예천군", "children": [], "value": { "city": 47, "price": 47900 } },
+            { "name": "울릉군", "children": [], "value": { "city": 47, "price": 47940 } },
+            { "name": "울진군", "children": [], "value": { "city": 47, "price": 47730 } },
+            { "name": "의성군", "children": [], "value": { "city": 47, "price": 47730 } },
+            { "name": "청도군", "children": [], "value": { "city": 47, "price": 47820 } },
+
+            { "name": "청송군", "children": [], "value": { "city": 47, "price": 47750 } },
+            { "name": "칠곡군", "children": [], "value": { "city": 47, "price": 47850 } },
+            { "name": "포항시 남구", "children": [], "value": { "city": 47, "price": 47111 } },
+            { "name": "포항시 북구", "children": [], "value": { "city": 47, "price": 47113 } }
+          ]
+        },
+        {
+          "name": "경상남도", "children": [
+            { "name": "거제시", "children": [], "value": { "city": 48, "price": 48310 } },
+            { "name": "거창군", "children": [], "value": { "city": 48, "price": 48880 } },
+            { "name": "고성군", "children": [], "value": { "city": 48, "price": 48820 } },
+            { "name": "김해시", "children": [], "value": { "city": 48, "price": 48250 } },
+            { "name": "남해군", "children": [], "value": { "city": 48, "price": 48840 } },
+
+            { "name": "밀양시", "children": [], "value": { "city": 48, "price": 48270 } },
+            { "name": "사천시", "children": [], "value": { "city": 48, "price": 48240 } },
+            { "name": "산청군", "children": [], "value": { "city": 48, "price": 48860 } },
+            { "name": "양산시", "children": [], "value": { "city": 48, "price": 48330 } },
+            { "name": "의령군", "children": [], "value": { "city": 48, "price": 48720 } },
+
+            { "name": "진주시", "children": [], "value": { "city": 48, "price": 48170 } },
+            { "name": "창녕군", "children": [], "value": { "city": 48, "price": 48740 } },
+            { "name": "창원시 마산합포구", "children": [], "value": { "city": 48, "price": 48125 } },
+            { "name": "창원시 마산회원구", "children": [], "value": { "city": 48, "price": 48127 } },
+            { "name": "창원시 성산구", "children": [], "value": { "city": 48, "price": 48123 } },
+
+            { "name": "창원시 의창구", "children": [], "value": { "city": 48, "price": 48121 } },
+            { "name": "창원시 진해구", "children": [], "value": { "city": 48, "price": 48129 } },
+            { "name": "통영시", "children": [], "value": { "city": 48, "price": 48220 } },
+            { "name": "하동군", "children": [], "value": { "city": 48, "price": 48850 } },
+            { "name": "함안군", "children": [], "value": { "city": 48, "price": 48730 } },
+
+            { "name": "함양군", "children": [], "value": { "city": 48, "price": 48870 } },
+            { "name": "합천군", "children": [], "value": { "city": 48, "price": 48890 } }
+          ]
+        },
+        {
+          "name": "제주특별자치도", "children": [
+            { "name": "제주시", "children": [], "value": { "city": 50, "price": 50110 } },
+            { "name": "서귀포시", "children": [], "value": { "city": 50, "price": 50130 } }
+          ]
+        },
+      ];
+
+      $scope.onChange = function (option) {
+        console.log(option);
+        if (option.value) {
+          $scope.city = option.value.city;
+          $scope.price = option.value.price;
+
+          var saveOption = [];
+          for (var idx in $scope.optionProperties) {
+            saveOption.push({ key: $scope.optionProperties[idx], value: $scope.selectedOptions[idx].name });
+          }
+
+          $scope.optionData = saveOption;
+        }
+        save($scope.city, $scope.price);
+      };
+    });
+  </script>
+
+
+  <app-root> </app-root>
+</body>
+
+</html>

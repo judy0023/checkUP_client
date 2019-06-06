@@ -1,0 +1,188 @@
+<style>
+  h2,
+  #btn {
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  span {
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+    text-align: center;
+    color: red;
+    font-size: 20px;
+  }
+
+  td,
+  tr {
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 20px;
+  }
+</style>
+
+<style>
+  .cities {
+     background-color: rgb(197, 230, 247);
+     color: darkslategrey;
+     width: 145%;
+     margin: 20px;
+     padding: 20px;
+  }
+
+   .loader {
+      position: relative;
+      left: 45%;
+      top: 100px;
+     
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+   }
+
+  @-webkit-keyframes spin {
+     0% {
+        -webkit-transform: rotate(0deg);
+     }
+
+     100% {
+        -webkit-transform: rotate(360deg);
+     }
+  }
+
+  @keyframes spin {
+     0% {
+        transform: rotate(0deg);
+     }
+
+     100% {
+        transform: rotate(360deg);
+     }
+  }
+
+</style>
+
+<noscript>
+  <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/skel-noscript.css" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="stylesheet" href="/assets/css/style-desktop.css" />
+</noscript>
+
+<div class="loader" id="loader">
+</div>
+
+<div id="container" style="display:none;">
+</div>
+
+<div id="hospital" data-toggle="modal" data-target="#hosMapModal"> </div>
+<div id="section" (click)="returnHos()"></div>
+<div id="main-wrapper">
+  <div id="main">
+    <div class="container">
+      <div id="content" class="8u skel-cell-important">
+        <section>
+          <header>
+            <div id="hosSearch" *ngFor="let hosSearch of (this.hosSearchResult | async)">
+              <div id="mapShow" (click)="mapShow(hosSearch.hos_addr, hosSearch.hos_name, hosSearch.hos_no)"></div>
+              <div id="info" data-toggle="a" data-target="#a" (click)="data()"></div>
+              <div id="map" style="width:1100px;height:500px;"> </div>
+            </div>
+          </header>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="mapModal">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngFor="let res of this.res_info | async ">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="ly_header"> {{res.hos_name}} </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div style="width:auto;" id="pop_wrap">
+          <div id="pop_content">
+            <table class="table table-hover">
+              <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <th colspan="3">기본 정보</th>
+                </tr>
+              </thead>
+              <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <td width=150> 주소 </td>
+                  <td colspan="2"> {{res.hos_addr}} </td>
+                </tr>
+                <tr>
+                  <td width=150> 전화번호 </td>
+                  <td colspan="2"> {{res.hos_number}} </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <br>
+            <br>
+
+            <table class="table">
+              <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <th colspan="4"> 검진 항목 </th>
+                </tr>
+              </thead>
+              <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <td> 유방암 </td>
+                  <td id="bcCharg"> {{res.bcCharg}} <div style="display: none;"> O </div>
+                  </td>
+                  <td> 대장암 </td>
+                  <td id="ccCharg"> {{res.ccCharg}} <div style="display: none;"> O </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 자궁경부암 </td>
+                  <td id="cvChrg"> {{res.cvChrg}} <div style="display: none;"> O </div>
+                  </td>
+                  <td> 간암검진 </td>
+                  <td id="lvcaChrg"> {{res.lvcaChrg}} <div style="display: none;"> O </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 위암검진 </td>
+                  <td id="stmcaChrg"> {{res.stmcaChrg}} <div style="display: none;"> O </div>
+                  </td>
+                  <td> 일반검진 </td>
+                  <td id="grenChrg"> {{res.grenChrg}} <div style="display: none;"> O </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td> 구강검진 </td>
+                  <td id="mchkChrg"> {{res.mchkChrg}} <div style="display: none;"> O </div>
+                  </td>
+                  <td> 영유아검진 </td>
+                  <td id="ichkChart"> {{res.ichkChart}} <div style="display: none;"> O </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>`
+            <br>
+            <br>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<br>

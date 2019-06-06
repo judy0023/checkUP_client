@@ -1,0 +1,340 @@
+<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+
+<style>
+  span,
+  a,
+  h2,
+  p,
+  tr,
+  td,
+  header,
+  input,
+  label,
+  pre {
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 18px;
+  }
+</style>
+
+
+<div id="main-wrapper">
+  <div id="main">
+    <div class="container">
+
+      <div class="content">
+
+        <form (ngSubmit)="onSubmit()">
+          <div>
+            <br />
+            <br />
+            <!--흡연경험 여부-->
+            <h2>4. 흡연 경험이 있으십니까? </h2>
+            <br />
+            <h2>흡연경험여부 :
+              <input type="radio" name="smoking" (click)="this.customerService.data().smoking = 0" checked="on"
+                (click)="smokingCheck()" style="width:15px;height:15px;"> NO <input type="radio" name="smoking"
+                (click)="this.customerService.data().smoking = 1" (click)="smokingCheck()"
+                style="width:15px;height:15px;"> YES </h2>
+            <br />
+
+            <!--흡연경험 여부 -> yes 일때-->
+            <div id="smoke" style="display:none">
+              <div class="form-group">
+                <h2>4-1. 흡연 기간을 기입해 주십시오.</h2>
+                <br />
+                <label for="uname">흡연기간_몇 갑:</label> <input type="text" class="form-control" placeholder=""
+                  name="smoking_day_cut" required [(ngModel)]="customerService.data().smoking_day_cut"
+                  style="width:200px">
+                <br />
+                <label for="uname">흡연기간_몇 년:</label> <input type="text" class="form-control" placeholder=""
+                  name="smoking_day" required [(ngModel)]="customerService.data().smoking_day" style="width:200px">
+                <br />
+                <h2>4-2. 혹시, 금연 중이라면 답해 주십시오.</h2>
+                <br />
+                <pre>금연기간 : <input type="text" class="form-control" placeholder=""  name="noSmoking_day" required [(ngModel)]="customerService.data().noSmoking_day" style="width:200px"> </pre>
+                <br />
+              </div>
+            </div>
+
+            <!--(본인)관련질환 유무-->
+            <h2>5. 본인이 가지고 있는 질환이 있다면 체크해 주십시오.</h2>
+            <br />
+            <table class="table table-hover">
+              <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <th>질병 종류</th>
+                  <th colspan="4">관련 질환</th>
+                </tr>
+              </thead>
+              <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <!--갑상산암 관련-->
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td><a
+                      href="javascript: swal ( '갑상선암' ,  '현재까지 갑상선암의 발생 원인은 목 주변에 방사선 치료를 받거나 체르노빌에서와 같이 방사능 피폭에 의한 경우를 제외하고는 잘 알려져 있지 않습니다. 아직까지 확실하게 밝혀져 있지는 않지만 아마도 암 발생을 유발시키는 유전자의 이상이 암의 원인이지 않을까 생각됩니다. 암은 세포가 죽고 사는 것을 관장하는 중요한 유전자 발현에 이상이 생기면서 발생합니다.' , 'info' );">갑상선암</a>
+                  </td>
+                  <td><input type="checkbox" name="tcancer" (click)="this.tcancer = 1" style="width:18px;height:18px;">
+                    경부 방사선 노출력</td>
+                  <td><input type="checkbox" name="tcancer" (click)="this.tcancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '갑상선 수질암' , '갑상선 세포에서 암이 생긴 것이 아닙니다. 
+                      갑상선에는 우리몸의 칼슘량을 조절해 주는 칼시토닌이라는 물질을 만들어 내는 C세포가 있습니다. 
+                      갑상선수질암은 그 C세포에서 발병되는 것으로 알려져 있습니다. 검사결과 수질암에서는 RET라는 돌연변이 유전자가 발견되었고 그것으로 인해 기능이 항진되면 갑상선수질암이
+                       발병합니다. 또한 부모에게서 RET 유전자를 물려받아 수질암이 발병하는 경우도 있고 그것을 가족성 갑상수질암이라 합니다.' , 'info')">
+                      갑상선 수질암</a></td>
+                  <td><input type="checkbox" name="tcancer" (click)="this.tcancer = 1" style="width:18px;height:18px;">
+                    선종성 융중증</td>
+                </tr>
+                <tr>
+                  <!--간암 관련-->
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td>간암</td>
+                  <td><input type="checkbox" name="lcancer" (click)="this.lcancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript:swal ( 'B형 간염 바이러스' ,  '급성과 만성 감염을 일으킬 수 있는 바이러스성 질환입니다. B형간염은 전세계적으로 발생 빈도가 높을 뿐 아니라 간경변증이나 간암 같은 만성 간질환의 주요한 원인입니다.' , 'info' );">
+                      B형 간염 바이러스</a></td>
+                  <td><input type="checkbox" name="lcancer" (click)="this.lcancer = 1" style="width:18px;height:18px;">
+                    <a href="javascript: swal ( 'C형 간염 바이러스' , 'C형간염바이러스에 감염된 사람의 혈액에 의해 감염됩니다.' , 'info')">C형 간염 바이러스</a></td>
+                  <td><input type="checkbox" name="lcancer" (click)="this.lcancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '만성 B형 간염' , '무증상에서부터 피로감, 전신권태, 지속적인 또는 간헐적인 황달, 식욕부진 등 다양합니다. 정맥류 출혈, 간성 혼수, 혈액응고장애, 비장비대, 
+                      복수 증상을 유발하는 간경변증과 간암 등의 합병증이 있습니다.' , 'info');">만성B, C형 간염 바이러스</a></td>
+                  <td><input type="checkbox" name="lcancer" (click)="this.lcancer = 2" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '간경화' , '간염 바이러스나 술 등에 의한 간의 염증이 오랫동안 지속되면서 간 표면이 우둘투둘해지면서 딱딱하게 변한 것을 말합니다.' , 'info');">
+                      간경화</a>
+                  </td>
+                </tr>
+                <tr>
+                  <!--위암 관련-->
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td>위암</td>
+                  <td><input type="checkbox" name="scancer" (click)="this.scancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '위축성위염' , '위 내벽을 싸고 있는 점막층이 위축(구겨지고 쭈글쭈글해짐)된 것을 말한다. 
+                      위의 염증이 오래 지속되어 혈관이 보일 정도로 위점막이 얇아진 것이 원인입니다.' , 'info');">위축성
+                      위염</a></td>
+                  <td><input type="checkbox" name="scancer" (click)="this.scancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '장상피화생' , '위벽 세포가 손상을 입으면 위산 분비량이 줄면서 위장 내부의 산성도가 감소한다. 
+                      위산에 강한 위상피세포가 위산이 없는 소장이나 대장 점막을 구성하는 장상피세포로 변하게 됩니다.' , 'info');">장상 피화생</a></td>
+                  <td><input type="checkbox" name="scancer" (click)="this.scancer = 1" style="width:18px;height:18px;">
+                    <a
+                      href="javascript: swal ( '위선종' , '장상피화생 단계를 벗어나면 이형성(異形成)이 된다. 정상적인 세포가 비정상적으로 자라 암세포 형태를 닮아가는 과정으로, 거의 암에 가까운 병변이라고 보면 됩니다.' , 'info');">
+                      위선종(용종)</a>
+                  </td>
+                  <td><input type="checkbox" name="scancer" (click)="this.scancer = 1" style="width:18px;height:18px;">
+                    부분 위절제</td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+            <br />
+            <!--가족 병력 유무-->
+            <h2>6. 본인 및 가족이 가지고 있는 질환이 있다면 체크해 주십시오.</h2>
+            <br />
+            <table class="table table-hover">
+              <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <th rowspan="2">질병 종류</th>
+                  <th colspan="5">있다(복수선택 가능)</th>
+                </tr>
+                <tr>
+                  <th>부모</th>
+                  <th>형제</th>
+                  <th>자매</th>
+                  <th>자녀</th>
+                </tr>
+              </thead>
+              <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <td>갑상선암</td>
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td><input type="checkbox" name="tcancer_F" (click)="this.tcancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="tcancer_F" (click)="this.tcancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="tcancer_F" (click)="this.tcancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="tcancer_F" (click)="this.tcancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                </tr>
+                <tr>
+                  <td>대장암</td>
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td><input type="checkbox" name="cocancer_F" (click)="this.cocancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="cocancer_F" (click)="this.cocancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="cocancer_F" (click)="this.cocancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="cocancer_F" (click)="this.cocancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                </tr>
+                <tr>
+                  <td>위암</td>
+                  <!--디폴트 값 = 0 (없다)-->
+                  <td><input type="checkbox" name="scancer_F" (click)="this.scancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="scancer_F" (click)="this.scancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="scancer_F" (click)="this.scancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="checkbox" name="scancer_F" (click)="this.scancer_F = 1"
+                      style="width:23px;height:23px;"></td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+            <br />
+
+            <!--검사 주기-->
+            <h2>7. 본인이 검사 받은 항목이 있다면 작성해 주십시오.</h2>
+            <br />
+
+            <table class="table table-hover">
+              <thead style="margin-left: auto; margin-right: auto; text-align: center;">
+                <tr>
+                  <th rowspan="2">질병</th>
+                  <th rowspan="2">검사명</th>
+                  <th colspan="6">질병 시기</th>
+                </tr>
+                <tr>
+                  <th> ~6개월</th>
+                  <th> 6개월 ~ 1년 </th>
+                  <th> 1년 ~ 2년 </th>
+                  <th> 2년 ~ 3년 </th>
+                  <th> 3년 ~ 5년 </th>
+                  <th> 5년이상, 없다</th>
+                </tr>
+
+              </thead>
+              <tbody style="margin-left: auto; margin-right: auto; text-align: center;">
+
+                <tr>
+                  <td>갑상선암</td>
+                  <td><a href="javascript: swal ( '갑상선 초음파' , '반사되는 초음파를 통해 이상 병변을 확인하는 검사 방법입니다.' , 'info');">갑상선 초음파</a></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="tcancer_A" (click)="this.customerService.data().tcancer_A = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td>간암</td>
+                  <td><a href="javascript: swal ( '간초음파' , '간으로 보내 반사되는 초음파를 통해 간 속의 이상 병변을 확인하는 검사 방법입니다.' , 'info');">간초음파</a></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lcancer_A" (click)="this.customerService.data().lcancer_A = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td>폐암</td>
+                  <td><a href="javascript: swal ( '저선량 흉부 CT' , '원형의 기계에 들어가서 흉부를 촬영하여 폐 안의 구조를 확인하는 검사입니다.' , 'info');">저선량 흉부 CT</a></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="lucancer_A" (click)="this.customerService.data().lucancer_A = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td rowspan="2">대장암</td>
+                  <td><a href="javascript: swal ( '분변담혈검사' , '소량의 대변을 채취하여 검사하는 방법으로, 대변에 피가 섞여있는지를 보는 검사입니다.' , 'info');">분변장혈검사</a></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_A" (click)="this.customerService.data().cocancer_A = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td><a href="javascript: swal ( '대장내시경' , '내시경을 통해 대장 전체를 검사하는 방법입니다.' , 'info');">대장내시경</a></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="cocancer_B" (click)="this.customerService.data().cocancer_B = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td rowspan="2">위암</td>
+                  <td><a href="javascript: swal ( '위장조검사' , '조영제를 마시고 엑스레이 촬영으로 위를 검사하는 방법입니다.' , 'info');">위장조염검사</a></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_A" (click)="this.customerService.data().scancer_A = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+                <tr>
+                  <td><a href="javascript: swal ( '위내시경' , '내시경을 통해 식도, 위, 십이지장을 직접 보는 검사입니다.' , 'info');">위내시경</a></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 1"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 2"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 3"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 4"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 5"
+                      style="width:23px;height:23px;"></td>
+                  <td><input type="radio" name="scancer_B" (click)="this.customerService.data().scancer_B = 6"
+                      checked="on" style="width:23px;height:23px;"></td>
+                </tr>
+
+              </tbody>
+            </table>
+            <input type="submit" class="btn btn-outline-primary" value="NEXT" style="float:right;">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
