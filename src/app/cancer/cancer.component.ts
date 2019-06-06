@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Customer } from '../customer';
 
 @Component({
   selector: 'app-cancer',
@@ -15,6 +16,7 @@ export class CancerComponent implements OnInit {
 
   private onSubmit() {
     this.router.navigate(['first']);    
+    console.log(Customer);
   }
 
 }

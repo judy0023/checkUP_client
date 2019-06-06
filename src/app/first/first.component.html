@@ -36,13 +36,12 @@
   }
 
   span {
-      font-weight: bold;
-      font-family: 'Nanum Gothic', sans-serif;
-      text-align: center;
-      color: red;
-      font-size: 20px;
-   }
-
+    font-weight: bold;
+    font-family: 'Nanum Gothic', sans-serif;
+    text-align: center;
+    color: red;
+    font-size: 20px;
+  }
 </style>
 
 
@@ -91,29 +90,30 @@
               <tr>
                 <td> 3. 성 별 </td>
                 <td><label for="1"><input type="radio" class="btn btn-primary" name="gender" id="1"
-                    (click)="customerService.data().gender = 1" (click)="sexCheck()"> 남자</label></td>
+                      (click)="customerService.data().gender = 1" (click)="sexCheck()"> 남자</label></td>
                 <td><label for="2"><input type="radio" class="btn btn-primary" name="gender" id="2"
-                    (click)="customerService.data().gender = 2" (click)="sexCheck()"> 여자 </label></td>
+                      (click)="customerService.data().gender = 2" (click)="sexCheck()"> 여자 </label></td>
               </tr>
               <tr>
                 <td>
                   <div id="sex1" style="display: none"> 3-1. 성 경험 여부</div>
                 </td>
                 <td>
-                  <div id="sex2" style="display: none"><label for="3"><input type="radio" class="btn btn-primary" name="sexlife"
-                      (click)="customerService.data().ccancer = 0" id="3"> No </label></div>
+                  <div id="sex2" style="display: none"><label for="3"><input type="radio" class="btn btn-primary"
+                        name="sexlife" (click)="customerService.data().ccancer = 0" id="3"> No </label></div>
                 </td>
                 <td>
-                  <div id="sex3" style="display: none"><label for="4"><input type="radio" class="btn btn-primary" name="sexlife"
-                      (click)="customerService.data().ccancer = 1" id="4"> Yes </label></div>
+                  <div id="sex3" style="display: none"><label for="4"><input type="radio" class="btn btn-primary"
+                        name="sexlife" (click)="customerService.data().ccancer = 1" id="4"> Yes </label></div>
                 </td>
               </tr>
               <tr>
                 <td> 병원 추천 여부 </td>
                 <td><label for="5"><input type="radio" class="btn btn-primary" name="hospital"
-                    (click)="customerService.data().hosRecCheck = 0" id="5"> No </label></td>
+                      (click)="customerService.data().hosRecCheck = 0" id="5"> No </label></td>
                 <td><label for="6"><input type="radio" class="btn btn-primary" name="hospital" id="6"
-                    (click)="customerService.data().hosRecCheck = 1" data-toggle="modal" data-target="#myModal"> Yes </label>
+                      (click)="customerService.data().hosRecCheck = 1" data-toggle="modal" data-target="#myModal"> Yes
+                  </label>
                 </td>
               </tr>
               <tr>

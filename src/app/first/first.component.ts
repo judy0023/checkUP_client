@@ -6,7 +6,6 @@ import { Customer } from '../customer';
 declare const getSaveCity: any;
 declare const getSavePrice: any;
 
-
 @Component({
   selector: 'app-first',
   templateUrl: './first.component.html',
@@ -158,6 +157,5 @@ export class FirstComponent implements OnInit {
     this.customerService.data().city = this.city;
     this.customerService.data().price = this.price;
   }
-
 }
 

@@ -16,11 +16,19 @@ function onCheck() {
 
 function setOptionName(optionName) {
 
-    if(optionNames.length > 2) {
+    if (optionNames.length > 2) {
         optionNames = new Array();
     }
-    
-    optionNames[optionNames.length] = optionName;
+
+    var cities = ["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
+        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"];
+
+    for (var i = 0; i < cities.length; i++) {
+        if (optionName == cities[i]) {
+            optionNames[0] = optionName;
+        }
+    }
+    optionNames[1] = optionName;
 }
 
 function getOptionName(id) {
@@ -46,7 +54,7 @@ function getOptionName(id) {
                 break;
         }
     }
-    
+
     return optionNames;
 }
 
@@ -204,7 +212,7 @@ function map2(coords, name, hospital_herf, id) {
     // 인포윈도우를 생성합니다
     var infowindow = new daum.maps.InfoWindow({
         position: iwPosition,
-        content: '<div style="padding:5px;">'+ name + '</div>'
+        content: '<div style="padding:5px;">' + name + '</div>'
     });
 
     daum.maps.event.addListener(marker, 'click', function () {
@@ -241,4 +249,6 @@ function makeOutListener(infowindow) {
         infowindow.close();
     };
 }
+
+
 
