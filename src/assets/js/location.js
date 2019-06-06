@@ -2,7 +2,8 @@ var city, price, something = 0;
 var dataService;
 var hosSearchResult;
 var res_info;
-var optionNames = new Array();
+var optionNames1 = new Array();
+var optionNames2 = new Array();
 
 function onCheck() {
     if (city === undefined || price === undefined || something === undefined) {
@@ -14,48 +15,61 @@ function onCheck() {
     }
 }
 
-function setOptionName(optionName) {
+function setOptionName1(optionName) {
 
-    if (optionNames.length > 2) {
-        optionNames = new Array();
-    }
 
     var cities = ["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
         , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"];
 
     for (var i = 0; i < cities.length; i++) {
         if (optionName == cities[i]) {
-            optionNames[0] = optionName;
+            optionNames1[0] = optionName;
         }
     }
-    optionNames[1] = optionName;
+    optionNames1[1] = optionName;
+}
+
+function setOptionName2(optionName) {
+
+    var cities = ["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
+        , "충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도"];
+
+    for (var i = 0; i < cities.length; i++) {
+        if (optionName == cities[i]) {
+            optionNames2[0] = optionName;
+        }
+    }
+    optionNames2[1] = optionName;
 }
 
 function getOptionName(id) {
     if (id == 1) {
         switch (something) {
             case 0:
-                optionNames[2] = "전체";
+                optionNames2[2] = "전체";
                 break;
             case 1:
-                optionNames[2] = "일반";
+                optionNames2[2] = "일반";
                 break;
             case 2:
-                optionNames[2] = "구강";
+                optionNames2[2] = "구강";
                 break;
             case 3:
-                optionNames[2] = "암";
+                optionNames2[2] = "암";
                 break;
             case 5:
-                optionNames[2] = "출장";
+                optionNames2[2] = "출장";
                 break;
             case 6:
-                optionNames[2] = "영유아";
+                optionNames2[2] = "영유아";
                 break;
         }
+        return optionNames2;
+    } else {
+        return optionNames1;
     }
 
-    return optionNames;
+
 }
 
 function returnHosSearchResult() {
